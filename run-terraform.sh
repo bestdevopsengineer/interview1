@@ -59,6 +59,7 @@ case $CMD in
   init)
     docker-compose run --rm terraform \
       -chdir="$COMP_DIR" init \
+      -reconfigure \
       -backend-config="backend/${ENV}.tfvars"
     ;;
   plan)
