@@ -1,6 +1,6 @@
 resource "aws_security_group" "docker_host" {
   name        = "${var.env}-ec2-sg"
-  description = "Security group for EC2"
+  description = "Security group for EC2 ...."
   vpc_id      = var.vpc_id
 
   ingress {
