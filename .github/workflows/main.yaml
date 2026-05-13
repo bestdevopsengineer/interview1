@@ -38,10 +38,18 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
 
       - name: Make script executable
         run: chmod +x ./run-terraform.sh
