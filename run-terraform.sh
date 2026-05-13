@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<EOF
-Usage: $0 <init|plan|apply> components=<component> [env=<env>]
+Usage: $0 <init|plan|apply|destroy> components=<component> [env=<env>]
 
 Examples:
   $0 init   components=storage        # defaults to env=dev
@@ -70,6 +70,11 @@ case $CMD in
   apply)
     docker compose run --rm terraform \
       -chdir="$COMP_DIR" apply \
+      -var="env=${ENV}" -auto-approve
+    ;;
+  destroy)
+    docker compose run --rm terraform \
+      -chdir="$COMP_DIR" destroy \
       -var="env=${ENV}" -auto-approve
     ;;
   *)
