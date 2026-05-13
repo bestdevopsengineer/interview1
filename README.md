@@ -14,7 +14,7 @@ Provider type: OpenID Connect
 Provider URL: https://token.actions.githubusercontent.com
 Audience: sts.amazonaws.com
 
-
+# add inline policy so it can access s3 bucket
 AWS Console → IAM → Roles → your GitHub role → Permissions → Add permissions → Create inline policy
 {
   "Version": "2012-10-17",

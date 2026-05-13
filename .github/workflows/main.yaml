@@ -55,14 +55,12 @@ jobs:
 
       - name: Make script executable
         run: chmod +x ./run-terraform.sh
-      - name: Check repo files
-        run: |
-          pwd
-          ls -la
-          ls -la terraform/components
-          ls -la terraform/components/vpc
-          ls -la terraform/components/vpc/backend 
 
       - name: Run Terraform
         run: |
-          ./run-terraform.sh ${{ github.event.inputs.action }} components=${{ github.event.inputs.component }}
+          if [ "${{ github.event.inputs.action }}" = "init" ]; then
+            ./run-terraform.sh init components=${{ github.event.inputs.component }} env=${{ github.event.inputs.environment }}
+          else
+            ./run-terraform.sh init components=${{ github.event.inputs.component }} env=${{ github.event.inputs.environment }}
+            ./run-terraform.sh ${{ github.event.inputs.action }} components=${{ github.event.inputs.component }} env=${{ github.event.inputs.environment }}
+          fi
