@@ -60,7 +60,8 @@ jobs:
           pwd
           ls -la
           ls -la terraform/components
-          ls -la terraform/components/vpc/backend || true
+          ls -la terraform/components/vpc
+          ls -la terraform/components/vpc/backend 
 
       - name: Run Terraform
         run: |
