@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - main
+      - prod
+      - dev
+      
   workflow_dispatch:
     inputs:
       environment:
