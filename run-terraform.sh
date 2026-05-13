@@ -43,7 +43,7 @@ if [ -z "${COMPONENT:-}" ]; then
 fi
 
 COMP_DIR="terraform/components/${COMPONENT}"
-BACKEND_FILE="terraform/components/backend/${ENV}.tfvars"
+BACKEND_FILE="${COMP_DIR}/backend/${ENV}.tfvars"
 
 if [ ! -d "$COMP_DIR" ]; then
   echo "Error: component dir not found: $COMP_DIR"
@@ -60,7 +60,7 @@ case $CMD in
     docker compose run --rm terraform \
       -chdir="$COMP_DIR" init \
       -reconfigure \
-      -backend-config="../backend/${ENV}.tfvars"
+      -backend-config="backend/${ENV}.tfvars"
     ;;
   plan)
     docker compose run --rm terraform \
