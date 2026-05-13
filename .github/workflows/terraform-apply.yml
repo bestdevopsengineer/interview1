@@ -1,6 +1,10 @@
 name: Terraform Apply
 
 on:
+  push:
+    branches:
+      - dev
+
   workflow_dispatch:
     inputs:
       environment:
@@ -34,7 +38,7 @@ on:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: ${{ github.event.inputs.environment || 'dev' }}
 
     permissions:
       id-token: write
@@ -57,10 +61,10 @@ jobs:
         run: chmod +x ./run-terraform.sh
 
       - name: Terraform Init
-        run: ./run-terraform.sh init components=${{ github.event.inputs.component }} env=${{ github.event.inputs.environment }}
+        run: ./run-terraform.sh init components=${{ github.event.inputs.component || 'vpc' }} env=${{ github.event.inputs.environment || 'dev' }}
 
       - name: Terraform Apply or Destroy
         run: |
-          ./run-terraform.sh ${{ github.event.inputs.action }} \
-          components=${{ github.event.inputs.component }} \
-          env=${{ github.event.inputs.environment }}
+          ./run-terraform.sh ${{ github.event.inputs.action || 'apply' }} \
+          components=${{ github.event.inputs.component || 'vpc' }} \
+          env=${{ github.event.inputs.environment || 'dev' }}
