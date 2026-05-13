@@ -60,7 +60,7 @@ case $CMD in
     docker compose run --rm terraform \
       -chdir="$COMP_DIR" init \
       -reconfigure \
-      -backend-config="backend/${ENV}.tfvars"
+      -backend-config="../backend/${ENV}.tfvars"
     ;;
   plan)
     docker compose run --rm terraform \
