@@ -1,0 +1,66 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+
+      component:
+        description: "Choose Terraform component"
+        required: true
+        default: "vpc"
+        type: choice
+        options:
+          - vpc
+          - ec2
+
+      action:
+        description: "Choose action"
+        required: true
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - destroy
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Build Terraform Docker Image
+        run: docker compose build --no-cache
+
+      - name: Make script executable
+        run: chmod +x ./run-terraform.sh
+
+      - name: Terraform Init
+        run: ./run-terraform.sh init components=${{ github.event.inputs.component }} env=${{ github.event.inputs.environment }}
+
+      - name: Terraform Apply or Destroy
+        run: |
+          ./run-terraform.sh ${{ github.event.inputs.action }} \
+          components=${{ github.event.inputs.component }} \
+          env=${{ github.event.inputs.environment }}

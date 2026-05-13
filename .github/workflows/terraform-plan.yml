@@ -1,0 +1,57 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+
+      component:
+        description: "Choose Terraform component"
+        required: true
+        default: "vpc"
+        type: choice
+        options:
+          - vpc
+          - ec2
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Build Terraform Docker Image
+        run: docker compose build --no-cache
+
+      - name: Make script executable
+        run: chmod +x ./run-terraform.sh
+
+      - name: Terraform Init
+        run: ./run-terraform.sh init components=${{ github.event.inputs.component || 'vpc' }} env=${{ github.event.inputs.environment || 'dev' }}
+
+      - name: Terraform Plan
+        run: ./run-terraform.sh plan components=${{ github.event.inputs.component || 'vpc' }} env=${{ github.event.inputs.environment || 'dev' }}
