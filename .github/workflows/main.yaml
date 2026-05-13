@@ -51,8 +51,8 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
       - name: Build Terraform Docker Image
-        run: docker-compose build --no-cache
-        
+        run: docker compose build --no-cache
+
       - name: Make script executable
         run: chmod +x ./run-terraform.sh
 

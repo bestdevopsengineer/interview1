@@ -57,18 +57,18 @@ fi
 # dispatch
 case $CMD in
   init)
-    docker-compose run --rm terraform \
+    docker compose run --rm terraform \
       -chdir="$COMP_DIR" init \
       -reconfigure \
       -backend-config="backend/${ENV}.tfvars"
     ;;
   plan)
-    docker-compose run --rm terraform \
+    docker compose run --rm terraform \
       -chdir="$COMP_DIR" plan \
       -var="env=${ENV}"
     ;;
   apply)
-    docker-compose run --rm terraform \
+    docker compose run --rm terraform \
       -chdir="$COMP_DIR" apply \
       -var="env=${ENV}" -auto-approve
     ;;
