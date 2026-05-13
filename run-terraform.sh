@@ -43,7 +43,7 @@ if [ -z "${COMPONENT:-}" ]; then
 fi
 
 COMP_DIR="terraform/components/${COMPONENT}"
-BACKEND_FILE="${COMP_DIR}/backend/${ENV}.tfvars"
+BACKEND_FILE="terraform/components/backend/${ENV}.tfvars"
 
 if [ ! -d "$COMP_DIR" ]; then
   echo "Error: component dir not found: $COMP_DIR"
